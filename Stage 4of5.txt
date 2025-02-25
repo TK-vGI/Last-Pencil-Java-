@@ -1,0 +1,108 @@
+package lastpencil;
+
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        //beginning of game
+        int pencils;
+        System.out.println("How many pencils would you like to use:");
+        pencils = checkStartPencils();
+        System.out.println("Who will be the first (John, Jack):");
+        String Player = checkPLayer();
+
+        //loop do-while
+        do {
+            printPencils(pencils);
+            playerTurn(Player);
+            int removePencils = removePencils(pencils);
+            pencils -= removePencils;
+            Player = changePlayerTurn(Player);
+        } while (pencils > 0);
+        printWinner(Player);
+
+        scanner.close();
+    }
+    private static void playerTurn(String name) {
+        System.out.println(name + "`s turn!");
+    }
+
+    private static String changePlayerTurn(String name) {
+        if (name.equals("John")) {
+            name = "Jack";
+        } else if (name.equals("Jack")) {
+            name = "John";
+        }
+        return name;
+    }
+
+    private static void printWinner(String player) {
+        String name1 = "John";
+        String name2 = "Jack";
+        String winner = name1.equals(player) ? name1 : name2;
+        System.out.printf("%s won!",winner);
+    }
+
+    private static int checkStartPencils() {
+        int startPen = 0;
+        boolean key = true;
+        do {
+            try {
+                Scanner scanner = new Scanner(System.in);
+                String userIn = scanner.nextLine();
+                if(userIn.isBlank()) {throw new NumberFormatException();}
+                startPen = Integer.parseInt(userIn);
+                if (startPen <= 0) {
+                    System.out.println("The number of pencils should be positive");
+                    continue;
+                }
+                key = false;
+            } catch (NumberFormatException e) {
+                System.out.println("The number of pencils should be numeric");
+            }
+        } while(key);
+        return startPen;
+    }
+
+    private static String checkPLayer() {
+        Scanner scanner = new Scanner(System.in);
+        String name1 = "John";
+        String name2 = "Jack";
+        do {
+            String userIn = scanner.next();
+            if (!(name1.equals(userIn) || name2.equals(userIn))) {
+                System.out.print("Choose between" + name1 + " and " + name2 + '\n');
+                continue;
+            }
+            return userIn;
+        } while (true);
+    }
+
+    private static void printPencils(int pencils) {
+        for (int p = 1; p <= pencils; p++) {
+            System.out.print('|');
+        }
+        System.out.println();
+    }
+
+    private static int removePencils(int pencils) {
+        int num;
+        do {
+            try {
+                Scanner scanner = new Scanner(System.in);
+                String userIn = scanner.next();
+                num = Integer.parseInt(userIn);
+                if (num <=0 || num > 3 ) {
+                    System.out.println("Possible values: '1', '2' or '3'");
+                } else if (num > pencils) {
+                    System.out.println("Too many pencils were taken");
+                } else {
+                    return num;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Possible values: '1', '2' or '3'");
+            }
+        } while(true);
+    }
+}
